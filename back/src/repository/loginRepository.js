@@ -5,11 +5,10 @@ export async function inserirUsuario(pessoa) {
   let hash = Crypto.SHA256(pessoa.senha).toString();
 
   const comando = `
-      insert into tb_login( email, senha)
-        values(?, ?);
+      INSERT INTO tb_login(email, senha)
+      VALUES (?, ?);
   `;
 
-  
   let resposta = await con.query(comando, [pessoa.email, hash]);
   let info = resposta[0];
 
@@ -18,17 +17,18 @@ export async function inserirUsuario(pessoa) {
 
 export async function verificarLogin(nutri) {
   const comando = `
-    SELECT email, senha
+    SELECT id_login, email, senha
     FROM tb_login
     WHERE email = ? AND senha = ?;
   `;
   const hash = Crypto.SHA256(nutri.senha).toString();
-  console.log("Hash gerado:", hash);
+  console.log("Hash gerado para login:", hash);
 
   try {
     const [linhas] = await con.query(comando, [nutri.email, hash]);
 
-    return linhas.length > 0;
+    // Retorna o usuário ou null
+    return linhas[0] || null;
   } catch (err) {
     console.error("Erro ao verificar login:", err);
     throw new Error("Erro ao processar o login.");

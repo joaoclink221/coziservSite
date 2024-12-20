@@ -1,6 +1,7 @@
 import * as db from "../repository/loginRepository.js";
 import { gerarToken } from "../utils/jwt.js";
 import { Router } from "express";
+
 const endpoints = Router();
 
 endpoints.post('/usuario/', async (req, resp) => {
@@ -11,38 +12,37 @@ endpoints.post('/usuario/', async (req, resp) => {
 
       resp.send({
           novoId: id
-      })
-  }
-  catch (err) {
+      });
+  } catch (err) {
       resp.status(400).send({
           erro: err.message
-      })
+      });
   }
-})
+});
 
-
-//verifica o login
 endpoints.post("/login/", async (req, resp) => {
   try {
-    let nutri = req.body;
+    let { email, senha } = req.body;
 
-    let usuario = await db.verificarLogin(nutri);
+    console.log("Dados recebidos para login:", { email, senha });
 
-    if (usuario == null) {
-        resp.send({ erro: "Usuário ou senha incorreto(s)" })
+    let usuario = await db.verificarLogin({ email, senha });
+
+    if (!usuario) {
+        resp.status(401).send({ erro: "Usuário ou senha incorreto(s)" });
     } else {
-        let token = gerarToken(usuario);
+        let token = gerarToken({ id: usuario.id_login, email: usuario.email });
         resp.send({
-            "usuario": usuario,
-            "token": token
-        })
+            usuario: { id: usuario.id_login, email: usuario.email },
+            token
+        });
     }
-}
-catch (err) {
+  } catch (err) {
+    console.error("Erro ao fazer login:", err.message);
     resp.status(400).send({
         erro: err.message
-    })
-}
+    });
+  }
 });
 
 export default endpoints;

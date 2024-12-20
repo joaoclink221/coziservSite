@@ -49,7 +49,7 @@ endpoint.get("/clientes/", async(req, resp) =>{
    } 
 })
 
-endpoint.delete("excluirCliente/:id/", autenticar, async ( req, resp) =>{
+endpoint.delete("/excluirCliente/:id/", autenticar, async ( req, resp) =>{
     try {
         const {id} = req.params;
         const resultado = await db.excluirCliente(id);
