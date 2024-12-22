@@ -31,9 +31,9 @@ const Clientes = () => {
             .catch(error => {
                 console.error("erro ao buscar cliente:", error);
                 if (clienteList.length == 0) { setErro("nenhum cliente encontrado") }
-                else { setErro("erro ao buscar consulta. tente novamente mais tarde") }
+                else { setErro("erro ao buscar cliente. tente novamente mais tarde") }
             })
-    }, [consultasList]);
+    }, [clienteList]);
 
     const excluirCliente = async (id) => {
         try {
@@ -41,7 +41,7 @@ const Clientes = () => {
             alert(resposta.data.message);
             setClienteList(clienteList.filter((cliente) => cliente.id_cliente !== id))
         } catch (erro) {
-            alert("Erro ao excluir consulta: " + erro.message);
+            alert("Erro ao excluir cliente: " + erro.message);
         }
     }
 
@@ -104,7 +104,7 @@ const Clientes = () => {
                             </tbody>
                         </table>
                     ) : (
-                        !erro && <p>Nenhuma consulta encontrada.</p>
+                        !erro && <p>Nenhum cliente encontrado.</p>
                     )}
 
                 </div>

@@ -68,5 +68,27 @@ endpoint.delete("/excluirServico/:id/", autenticar, async (req, resp) => {
     }
   });
   
+  endpoint.put("/atualizarServico/:id/", autenticar, async (req, resp) => {
+    try {
+      const { id } = req.params; 
+      const { nm_cliente, tipo_servico, dt_passada, valor, cnpj, razao } = req.body; 
+  
+      const resultado = await db.atualizarServico(id, {
+        nm_cliente,
+        tipo_servico,
+        dt_passada,
+        valor,
+        cnpj,
+        razao,
+      });
+  
+      return resp.status(200).send({ message: resultado.message });
+    } catch (err) {
+      return resp.status(500).send({
+        erro: `Erro ao atualizar serviço: ${err.message}`,
+      });
+    }
+  });
+  
 
 export default endpoint
